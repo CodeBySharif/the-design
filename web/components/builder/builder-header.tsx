@@ -17,7 +17,7 @@ export function BuilderHeader({ step, onStepClick, action }: BuilderHeaderProps)
       style={{ background: "var(--color-canvas)" }}
     >
       <div className="ds-container flex h-14 items-center justify-between">
-        <Link href="/" className="ds-headline text-base sm:text-lg">
+        <Link href="/builder" className="ds-headline text-base sm:text-lg">
           The Design
         </Link>
         {action}
