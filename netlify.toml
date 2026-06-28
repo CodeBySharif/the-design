@@ -1,0 +1,10 @@
+# Next.js app lives in web/ — without this, Netlify builds the repo root (no site → 404).
+[build]
+  base = "web"
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
