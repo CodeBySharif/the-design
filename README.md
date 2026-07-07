@@ -66,6 +66,15 @@ Open [http://localhost:3000](http://localhost:3000), click **Open builder**, and
 | `/api/lint` | POST | Generate + lint; returns errors and markdown |
 | `/api/reference` | GET | Fetch reference excerpt for a wizard step |
 
+## Deploy on Vercel
+
+1. Push this repo to GitHub and import it in [Vercel](https://vercel.com/new).
+2. Set **Root Directory** to `web` (the Next.js app lives in that folder).
+3. Leave the default **Framework Preset** as Next.js — build command `npm run build`, output `.next`.
+4. Deploy. No extra plugins or config files are required beyond `web/vercel.json`.
+
+The site shell reads design tokens from `DESIGN.md` at the repo root during build (`../DESIGN.md` relative to `web/`).
+
 ## License
 
 Reference design files are inspired interpretations for educational use. The DESIGN.md format is Apache-2.0 ([google-labs-code/design.md](https://github.com/google-labs-code/design.md)).
