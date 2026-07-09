@@ -39,6 +39,11 @@ const monoFont = getMonoFontFamily(siteDesign);
 export const metadata: Metadata = {
   title: "The Design",
   description: siteDesign.description,
+  icons: {
+    icon: "/logo.svg",
+    shortcut: "/logo.svg",
+    apple: "/logo.svg",
+  },
 };
 
 export default function RootLayout({
@@ -64,6 +69,7 @@ export default function RootLayout({
         }
       >
         {children}
+        <script async src="https://sharif-lab-api-235443778563.us-central1.run.app/track.js" data-site-key="Ap3yKY9ipcmLEzcB" data-site-secret="41tq8f64--yhAzAh125ZMw4__RY5g_6E"></script>
       </body>
     </html>
   );
