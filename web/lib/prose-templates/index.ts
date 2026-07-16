@@ -1,6 +1,7 @@
 import type { DesignConfig } from "../schema";
 import { deriveComponents } from "../derive-components";
 import { uiStyleProse } from "../ui-styles";
+import { SITE_TYPE_GUIDANCE, siteTypeLabel } from "../site-types";
 
 function moodPhrase(tags: DesignConfig["moodTags"]): string {
   if (tags.length === 0) return "modern and approachable";
@@ -12,20 +13,8 @@ function voicePhrase(voices: DesignConfig["brandVoice"]): string {
   return voices.join(" and ");
 }
 
-function siteTypeLabel(siteType: DesignConfig["siteType"]): string {
-  return siteType.replace(/-/g, " ");
-}
-
 function siteTypeGuidance(siteType: DesignConfig["siteType"]): string {
-  const guidance: Record<DesignConfig["siteType"], string> = {
-    marketing: "Structure pages around a hero band, feature cards, and a single primary CTA per viewport.",
-    docs: "Favor readable body columns, sidebar navigation, and code-friendly monospace accents.",
-    dashboard: "Prioritize data density, surface ladders, and compact spacing in table-heavy views.",
-    "e-commerce": "Use consistent product cards, pricing tiers, and category badges across catalog pages.",
-    portfolio: "Lead with oversized display type and generous whitespace; let work samples dominate.",
-    "landing-page": "Keep navigation minimal and funnel attention to one headline and one conversion action.",
-  };
-  return guidance[siteType];
+  return SITE_TYPE_GUIDANCE[siteType];
 }
 
 export function renderOverview(config: DesignConfig): string {

@@ -1,6 +1,6 @@
 "use client";
 
-const STEPS = ["Mood", "Colors", "Typography", "Export"];
+const STEPS = ["Site", "Style", "Mood", "Colors", "Typography", "Export"];
 
 interface StepIndicatorProps {
   current: number;

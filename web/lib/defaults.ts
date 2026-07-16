@@ -1,5 +1,6 @@
 import type { DesignConfig } from "./schema";
 import { buildTypeScale } from "./type-scales";
+import { SITE_TYPE_DOS } from "./site-types";
 
 const displayFont = "Inter";
 const bodyFont = "Inter";
@@ -140,15 +141,6 @@ export function getDefaultDontsForMood(moodTags: DesignConfig["moodTags"]): stri
   }
   return donts;
 }
-
-const SITE_TYPE_DOS: Record<DesignConfig["siteType"], string> = {
-  marketing: "Lead with a hero band and a single primary CTA per viewport.",
-  docs: "Prioritize readable body type and clear heading hierarchy for long-form content.",
-  dashboard: "Default to compact spacing and a surface ladder in data-dense views.",
-  "e-commerce": "Make product cards and pricing tiers visually consistent across the catalog.",
-  portfolio: "Let large display type and generous whitespace carry the narrative.",
-  "landing-page": "Keep the page focused — one message, one primary action, minimal nav.",
-};
 
 const BRAND_VOICE_DOS: Record<DesignConfig["brandVoice"][number], string> = {
   formal: "Use restrained language and consistent typographic hierarchy — avoid casual phrasing.",

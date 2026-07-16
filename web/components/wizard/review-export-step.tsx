@@ -97,9 +97,12 @@ export function ReviewExportStep({
 
       {lintErrors.length > 0 && (
         <div
-          className="rounded-lg border px-4 py-3"
+          className="rounded-lg px-4 py-3"
           style={{
-            borderColor: "var(--color-error)",
+            borderTop: "1px solid var(--color-error)",
+            borderRight: "1px solid var(--color-error)",
+            borderBottom: "1px solid var(--color-error)",
+            borderLeft: "1px solid var(--color-error)",
             background: "color-mix(in srgb, var(--color-error) 10%, transparent)",
           }}
         >

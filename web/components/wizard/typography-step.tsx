@@ -63,7 +63,7 @@ export function TypographyStep({ config, onChange }: TypographyStepProps) {
   return (
     <div className="space-y-6">
       <div>
-        <p className="ds-overline">Step 3</p>
+        <p className="ds-overline">Step 5</p>
         <h2 className="ds-headline mt-1">Typography</h2>
         <p className="ds-body-sm ds-text-muted mt-1">
           {isMixedBatch
@@ -127,10 +127,13 @@ export function TypographyStep({ config, onChange }: TypographyStepProps) {
       </div>
 
       <div
-        className="rounded-lg border p-6"
+        className="rounded-lg p-6"
         style={{
           background: config.colors.canvas,
-          borderColor: config.colors.hairline,
+          borderTop: `1px solid ${config.colors.hairline}`,
+          borderRight: `1px solid ${config.colors.hairline}`,
+          borderBottom: `1px solid ${config.colors.hairline}`,
+          borderLeft: `1px solid ${config.colors.hairline}`,
           color: config.colors.ink,
         }}
       >

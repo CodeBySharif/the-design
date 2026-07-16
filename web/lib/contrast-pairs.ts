@@ -38,12 +38,28 @@ export function getColorContrastPairs(colors: DesignConfig["colors"]): ContrastP
       colorKeys: ["inkMuted", "canvas"],
     },
     {
+      id: "ink-muted-canvas-soft",
+      label: "Secondary text on section background",
+      foreground: colors.inkMuted,
+      background: colors.canvasSoft,
+      context: "Captions and metadata inside cards and sections",
+      colorKeys: ["inkMuted", "canvasSoft"],
+    },
+    {
       id: "ink-subtle-canvas",
       label: "Tertiary text on background",
       foreground: colors.inkSubtle,
       background: colors.canvas,
       context: "Placeholders and disabled text",
       colorKeys: ["inkSubtle", "canvas"],
+    },
+    {
+      id: "ink-subtle-canvas-soft",
+      label: "Tertiary text on section background",
+      foreground: colors.inkSubtle,
+      background: colors.canvasSoft,
+      context: "Small labels, metadata, and placeholders inside soft sections",
+      colorKeys: ["inkSubtle", "canvasSoft"],
     },
     {
       id: "on-primary-primary",

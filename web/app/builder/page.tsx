@@ -6,11 +6,13 @@ import { SiteButton } from "@/components/site/site-button";
 import { BuilderHeader } from "@/components/builder/builder-header";
 import { BuilderFooter } from "@/components/builder/builder-footer";
 import { STEPS } from "@/components/ui/step-indicator";
+import { SiteTypeStep } from "@/components/wizard/site-type-step";
+import { UiStyleStep } from "@/components/wizard/ui-style-step";
 import { MoodStep } from "@/components/wizard/mood-step";
 import { ColorsStep, colorsStepCanContinue } from "@/components/wizard/colors-step";
 import { TypographyStep } from "@/components/wizard/typography-step";
 import { ReviewExportStep } from "@/components/wizard/review-export-step";
-import { PreviewModal } from "@/components/preview/preview-modal";
+import { PreviewPanel } from "@/components/preview/preview-panel";
 import { SeedColorBar } from "@/components/theme/seed-color-bar";
 import { countFailingPairs } from "@/lib/contrast-pairs";
 import { autoFixContrast } from "@/lib/contrast-fix";
@@ -21,6 +23,7 @@ import {
   THEME_BATCH_SIZE,
   FONT_PAIRING_BATCH_SIZE,
 } from "@/lib/theme-generate";
+import { PREVIEW_CHANNEL_NAME, type PreviewMessage } from "@/lib/preview-sync";
 
 export default function BuilderPage() {
   const {
@@ -39,16 +42,47 @@ export default function BuilderPage() {
   const [previewOpen, setPreviewOpen] = useState(false);
 
   useEffect(() => {
+    // Every builder visit starts fresh at Site (step 1). Remove data saved by
+    // older versions that used Zustand's localStorage persistence.
+    window.localStorage.removeItem("design-md-builder");
+    useDesignStore.getState().reset();
+
+    if (!("BroadcastChannel" in window)) return;
+
+    const channel = new BroadcastChannel(PREVIEW_CHANNEL_NAME);
+    const sendConfig = () => {
+      const message: PreviewMessage = {
+        type: "config",
+        config: useDesignStore.getState().config,
+      };
+      channel.postMessage(message);
+    };
+
+    channel.onmessage = (event: MessageEvent<PreviewMessage>) => {
+      if (event.data?.type === "request-config") sendConfig();
+    };
+
+    const unsubscribe = useDesignStore.subscribe((state, previous) => {
+      if (state.config !== previous.config) sendConfig();
+    });
+
+    return () => {
+      unsubscribe();
+      channel.close();
+    };
+  }, []);
+
+  useEffect(() => {
     if (step >= STEPS.length) {
       setStep(STEPS.length - 1);
     }
   }, [step, setStep]);
 
-  const canContinue = step !== 1 || colorsStepCanContinue(config);
-  const colorFailures = step === 1 ? countFailingPairs(config.colors) : 0;
+  const canContinue = step !== 3 || colorsStepCanContinue(config);
+  const colorFailures = step === 3 ? countFailingPairs(config.colors) : 0;
 
   const continueHint =
-    step === 1 && !canContinue
+    step === 3 && !canContinue
       ? "Fix contrast issues before continuing (or use Auto-fix)."
       : undefined;
 
@@ -114,12 +148,16 @@ export default function BuilderPage() {
     const props = { config, onChange: updateConfig };
     switch (step) {
       case 0:
-        return <MoodStep {...props} />;
+        return <SiteTypeStep {...props} />;
       case 1:
-        return <ColorsStep {...props} />;
+        return <UiStyleStep {...props} />;
       case 2:
-        return <TypographyStep {...props} />;
+        return <MoodStep {...props} />;
       case 3:
+        return <ColorsStep {...props} />;
+      case 4:
+        return <TypographyStep {...props} />;
+      case 5:
         return (
           <ReviewExportStep
             config={config}
@@ -136,14 +174,20 @@ export default function BuilderPage() {
   };
 
   const footerLeft = () => {
-    if (step === 0) {
+    if (step === 2) {
       return (
         <>
           <SeedColorBar className="mr-2 border-r pr-4 ds-divider" />
-          <SiteButton variant="primary" onClick={() => setThemeBatch(generateThemeBatchFromSeeds(seedColors, THEME_BATCH_SIZE))}>
+          <SiteButton
+            variant="primary"
+            onClick={() => setThemeBatch(generateThemeBatchFromSeeds(seedColors, THEME_BATCH_SIZE))}
+          >
             Generate
           </SiteButton>
-          <SiteButton variant="secondary" onClick={() => setThemeBatch(generateRandomThemeBatch(THEME_BATCH_SIZE, seedColors))}>
+          <SiteButton
+            variant="secondary"
+            onClick={() => setThemeBatch(generateRandomThemeBatch(THEME_BATCH_SIZE, seedColors))}
+          >
             Randomize
           </SiteButton>
           {themeBatch !== null && (
@@ -155,7 +199,7 @@ export default function BuilderPage() {
       );
     }
 
-    if (step === 1 && colorFailures > 0) {
+    if (step === 3 && colorFailures > 0) {
       return (
         <SiteButton
           variant="secondary"
@@ -169,10 +213,13 @@ export default function BuilderPage() {
       );
     }
 
-    if (step === 2) {
+    if (step === 4) {
       return (
         <>
-          <SiteButton variant="secondary" onClick={() => setFontBatch(generateRandomFontPairingBatch(FONT_PAIRING_BATCH_SIZE))}>
+          <SiteButton
+            variant="secondary"
+            onClick={() => setFontBatch(generateRandomFontPairingBatch(FONT_PAIRING_BATCH_SIZE))}
+          >
             Randomize
           </SiteButton>
           {fontBatch !== null && (
@@ -188,44 +235,59 @@ export default function BuilderPage() {
   };
 
   return (
-    <div className="flex h-dvh flex-col overflow-hidden">
-      <BuilderHeader
-        step={step}
-        onStepClick={setStep}
-        action={
-          <div className="flex items-center gap-2">
-            <SiteButton variant="secondary" onClick={() => setPreviewOpen(true)}>
-              Preview
+    <div className="flex h-dvh overflow-hidden">
+      <div
+        className="flex min-h-0 min-w-0 flex-1 flex-col"
+        style={{
+          transition: "flex-basis 420ms cubic-bezier(0.22, 1, 0.36, 1)",
+        }}
+      >
+        <BuilderHeader
+          step={step}
+          onStepClick={setStep}
+          action={
+            <div className="flex items-center gap-2">
+              <SiteButton
+                variant={previewOpen ? "primary" : "secondary"}
+                onClick={() => setPreviewOpen((open) => !open)}
+                aria-pressed={previewOpen}
+              >
+                {previewOpen ? "Hide preview" : "Preview"}
+              </SiteButton>
+              <SiteButton variant="ghost" onClick={() => useDesignStore.getState().reset()}>
+                Reset
+              </SiteButton>
+            </div>
+          }
+        />
+
+        <main className="min-h-0 flex-1 overflow-y-auto">
+          <div className="ds-container py-8">{renderStep()}</div>
+        </main>
+
+        <BuilderFooter
+          left={footerLeft()}
+          hint={continueHint}
+          back={
+            <SiteButton variant="ghost" onClick={goPrev} disabled={step === 0}>
+              Back
             </SiteButton>
-            <SiteButton variant="ghost" onClick={() => useDesignStore.getState().reset()}>
-              Reset
-            </SiteButton>
-          </div>
-        }
+          }
+          forward={
+            step < STEPS.length - 1 ? (
+              <SiteButton variant="primary" onClick={goNext} disabled={!canContinue}>
+                Continue
+              </SiteButton>
+            ) : null
+          }
+        />
+      </div>
+
+      <PreviewPanel
+        config={config}
+        open={previewOpen}
+        onClose={() => setPreviewOpen(false)}
       />
-
-      <main className="min-h-0 flex-1 overflow-y-auto">
-        <div className="ds-container py-8">{renderStep()}</div>
-      </main>
-
-      <BuilderFooter
-        left={footerLeft()}
-        hint={continueHint}
-        back={
-          <SiteButton variant="ghost" onClick={goPrev} disabled={step === 0}>
-            Back
-          </SiteButton>
-        }
-        forward={
-          step < STEPS.length - 1 ? (
-            <SiteButton variant="primary" onClick={goNext} disabled={!canContinue}>
-              Continue
-            </SiteButton>
-          ) : null
-        }
-      />
-
-      <PreviewModal config={config} open={previewOpen} onClose={() => setPreviewOpen(false)} />
     </div>
   );
 }

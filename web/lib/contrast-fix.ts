@@ -127,14 +127,14 @@ function applyContrastFixPass(colors: DesignConfig["colors"]): DesignConfig["col
 
   next.ink = findPassingColor(textBackgrounds, next.ink, !onLight);
 
-  next.inkMuted = findPassingColor([next.canvas], next.inkMuted, !onLight);
+  next.inkMuted = findPassingColor(textBackgrounds, next.inkMuted, !onLight);
   if (next.inkMuted === next.ink) {
-    next.inkMuted = findPassingGray([next.canvas], !onLight);
+    next.inkMuted = findPassingGray(textBackgrounds, !onLight);
   }
 
-  next.inkSubtle = findPassingColor([next.canvas], next.inkSubtle, !onLight);
+  next.inkSubtle = findPassingColor(textBackgrounds, next.inkSubtle, !onLight);
   if (next.inkSubtle === next.ink || next.inkSubtle === next.inkMuted) {
-    next.inkSubtle = findPassingGray([next.canvas], onLight);
+    next.inkSubtle = findPassingGray(textBackgrounds, !onLight);
   }
 
   next.onPrimary = findPassingColor(
@@ -155,10 +155,12 @@ function applyContrastFixPass(colors: DesignConfig["colors"]): DesignConfig["col
         next.ink = findPassingGray(textBackgrounds, !onLight);
         break;
       case "ink-muted-canvas":
-        next.inkMuted = findPassingGray([next.canvas], !onLight);
+      case "ink-muted-canvas-soft":
+        next.inkMuted = findPassingGray(textBackgrounds, !onLight);
         break;
       case "ink-subtle-canvas":
-        next.inkSubtle = findPassingGray([next.canvas], onLight);
+      case "ink-subtle-canvas-soft":
+        next.inkSubtle = findPassingGray(textBackgrounds, !onLight);
         break;
       case "on-primary-primary":
         next.onPrimary = findPassingGray([next.primary], !isLightBackground(next.primary));

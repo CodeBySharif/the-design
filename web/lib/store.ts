@@ -1,7 +1,7 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 import { defaultDesignConfig } from "./defaults";
 import type { DesignConfig } from "./schema";
+import { sanitizeDesignConfig } from "./sanitize-config";
 import type { FontPairing, ThemePreset } from "./theme-presets";
 
 interface DesignStore {
@@ -20,48 +20,49 @@ interface DesignStore {
 }
 
 export const useDesignStore = create<DesignStore>()(
-  persist(
-    (set) => ({
-      config: defaultDesignConfig,
-      step: 0,
-      themeBatch: null,
-      fontBatch: null,
-      seedColors: [],
-      setConfig: (config) => set({ config }),
-      updateConfig: (partial) =>
-        set((state) => ({ config: { ...state.config, ...partial } })),
-      setStep: (step) => set({ step }),
-      setThemeBatch: (themeBatch) => set({ themeBatch }),
-      setFontBatch: (fontBatch) => set({ fontBatch }),
-      setSeedColors: (seedColors) => set({ seedColors: seedColors.slice(0, 3) }),
-      reset: () =>
-        set({
-          config: defaultDesignConfig,
-          step: 0,
-          themeBatch: null,
-          fontBatch: null,
-          seedColors: [],
+  (set) => ({
+    config: defaultDesignConfig,
+    step: 0,
+    themeBatch: null,
+    fontBatch: null,
+    seedColors: [],
+    setConfig: (config) => set({ config: sanitizeDesignConfig(config) }),
+    updateConfig: (partial) =>
+      set((state) => ({
+        config: sanitizeDesignConfig({
+          ...state.config,
+          ...partial,
+          colors: partial.colors
+            ? { ...state.config.colors, ...partial.colors }
+            : state.config.colors,
+          components: partial.components
+            ? { ...state.config.components, ...partial.components }
+            : state.config.components,
+          layout: partial.layout
+            ? { ...state.config.layout, ...partial.layout }
+            : state.config.layout,
+          layoutPatterns: partial.layoutPatterns
+            ? { ...state.config.layoutPatterns, ...partial.layoutPatterns }
+            : state.config.layoutPatterns,
+          spacing: partial.spacing
+            ? { ...state.config.spacing, ...partial.spacing }
+            : state.config.spacing,
+          rounded: partial.rounded
+            ? { ...state.config.rounded, ...partial.rounded }
+            : state.config.rounded,
         }),
-    }),
-    {
-      name: "design-md-builder",
-      merge: (persisted, current) => {
-        const p = persisted as Partial<DesignStore> | undefined;
-        const step = Math.min(p?.step ?? 0, 3);
-        return {
-          ...current,
-          ...p,
-          step,
-          config: {
-            ...defaultDesignConfig,
-            ...p?.config,
-            colors: { ...defaultDesignConfig.colors, ...p?.config?.colors },
-          },
-          themeBatch: p?.themeBatch ?? null,
-          fontBatch: p?.fontBatch ?? null,
-          seedColors: p?.seedColors ?? [],
-        };
-      },
-    },
-  ),
+      })),
+    setStep: (step) => set({ step }),
+    setThemeBatch: (themeBatch) => set({ themeBatch }),
+    setFontBatch: (fontBatch) => set({ fontBatch }),
+    setSeedColors: (seedColors) => set({ seedColors: seedColors.slice(0, 3) }),
+    reset: () =>
+      set({
+        config: defaultDesignConfig,
+        step: 0,
+        themeBatch: null,
+        fontBatch: null,
+        seedColors: [],
+      }),
+  }),
 );

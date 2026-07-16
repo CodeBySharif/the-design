@@ -24,7 +24,7 @@ export function MoodStep({ config, onChange }: MoodStepProps) {
   return (
     <div className="space-y-8">
       <div className="max-w-xl">
-        <p className="ds-overline">Step 1</p>
+        <p className="ds-overline">Step 3</p>
         <h2 className="ds-headline mt-1">Pick a theme</h2>
         <p className="ds-body-sm ds-text-muted mt-2">
           {seedColors.length > 0
@@ -34,7 +34,6 @@ export function MoodStep({ config, onChange }: MoodStepProps) {
               : "Choose a starting template, or add your colors in the footer and hit Generate."}
         </p>
       </div>
-
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-4">
         {templates.map((preset) => {

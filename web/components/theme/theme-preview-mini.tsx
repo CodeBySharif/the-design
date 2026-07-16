@@ -13,15 +13,24 @@ export function ThemePreviewMini({ preset, selected, compact }: ThemePreviewMini
 
   return (
     <div
-      className={`overflow-hidden rounded-md border ${compact ? "" : "rounded-lg"}`}
+      className={`overflow-hidden rounded-md ${compact ? "" : "rounded-lg"}`}
       style={{
-        borderColor: selected ? "var(--color-primary)" : colors.hairline,
+        borderTop: `1px solid ${selected ? "var(--color-primary)" : colors.hairline}`,
+        borderRight: `1px solid ${selected ? "var(--color-primary)" : colors.hairline}`,
+        borderBottom: `1px solid ${selected ? "var(--color-primary)" : colors.hairline}`,
+        borderLeft: `1px solid ${selected ? "var(--color-primary)" : colors.hairline}`,
         boxShadow: selected ? "0 0 0 2px var(--color-primary)" : undefined,
       }}
     >
       <div
         className={`flex items-center justify-between ${compact ? "px-1.5 py-1" : "px-2 py-1.5"}`}
-        style={{ background: colors.canvasSoft, borderBottom: `1px solid ${colors.hairline}` }}
+        style={{
+          background: colors.canvasSoft,
+          borderTop: "none",
+          borderRight: "none",
+          borderLeft: "none",
+          borderBottom: `1px solid ${colors.hairline}`,
+        }}
       >
         <span
           className={`truncate font-semibold ${compact ? "text-[9px]" : "text-[10px]"}`}

@@ -389,3 +389,17 @@ body {
     font-size: clamp(2rem, 8vw, var(--type-display-xl-size));
   }
 }
+
+/* Side preview: keep scroll, hide the track so the panel looks clean */
+.preview-panel-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  /* Reserve gutter so appearing/hiding scroll doesn't change width and re-scale the preview */
+  scrollbar-gutter: stable;
+}
+
+.preview-panel-scroll::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}

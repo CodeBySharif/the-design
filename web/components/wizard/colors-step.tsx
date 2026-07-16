@@ -53,7 +53,7 @@ export function ColorsStep({ config, onChange }: ColorsStepProps) {
   return (
     <div className="space-y-6">
       <div>
-        <p className="ds-overline">Step 2</p>
+        <p className="ds-overline">Step 4</p>
         <h2 className="ds-headline mt-1">Colors</h2>
         <p className="ds-body-sm ds-text-muted mt-1">
           Each color shows which pairings pass or fail WCAG AA (4.5:1). Fix failures before
