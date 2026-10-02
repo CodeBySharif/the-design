@@ -16,13 +16,13 @@ export function BuilderHeader({ step, onStepClick, action }: BuilderHeaderProps)
       className="shrink-0 border-b ds-divider"
       style={{ background: "var(--color-canvas)" }}
     >
-      <div className="ds-container flex h-14 items-center justify-between">
+      <div className="ds-shell flex h-14 items-center justify-between gap-4">
         <Link href="/builder" className="ds-headline text-base sm:text-lg">
           The Design
         </Link>
         {action}
       </div>
-      <div className="ds-container border-t pb-3 pt-3 ds-divider">
+      <div className="ds-shell border-t pb-3 pt-3 ds-divider">
         <StepIndicator current={step} onStepClick={onStepClick} />
       </div>
     </header>

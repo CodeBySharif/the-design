@@ -1,6 +1,6 @@
 "use client";
 
-const STEPS = ["Site", "Style", "Mood", "Colors", "Typography", "Export"];
+const STEPS = ["Style", "Mood", "Colors", "Typography", "Export"];
 
 interface StepIndicatorProps {
   current: number;
@@ -9,23 +9,22 @@ interface StepIndicatorProps {
 
 export function StepIndicator({ current, onStepClick }: StepIndicatorProps) {
   return (
-    <nav className="flex flex-wrap gap-2">
-      {STEPS.map((label, i) => (
-        <button
-          key={label}
-          type="button"
-          onClick={() => onStepClick?.(i)}
-          className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
-            i === current
-              ? "ds-step-active"
-              : i < current
-                ? "ds-step-done"
-                : "ds-step-pending"
-          }`}
-        >
-          {i + 1}. {label}
-        </button>
-      ))}
+    <nav aria-label="Builder steps" className="ds-step-rail" style={{ gridTemplateColumns: `repeat(${STEPS.length}, minmax(0, 1fr))` }}>
+      {STEPS.map((label, i) => {
+        const state = i === current ? "active" : i < current ? "done" : "pending";
+        return (
+          <button
+            key={label}
+            type="button"
+            onClick={() => onStepClick?.(i)}
+            aria-current={i === current ? "step" : undefined}
+            className={`ds-step-item ds-step-${state}`}
+          >
+            <span className="ds-step-index">{String(i + 1).padStart(2, "0")}</span>
+            <span className="ds-step-label">{label}</span>
+          </button>
+        );
+      })}
     </nav>
   );
 }

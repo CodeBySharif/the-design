@@ -92,6 +92,23 @@ export const layoutPatternSchema = z.object({
   split: z.boolean(),
 });
 
+export const dialLevelSchema = z.union([z.literal(1), z.literal(2), z.literal(3)]);
+
+export const dialsSchema = z.object({
+  energy: dialLevelSchema,
+  rhythm: dialLevelSchema,
+  motion: dialLevelSchema,
+});
+
+export const pageBriefSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1).max(80),
+  role: z.string().max(80),
+  intent: z.string().max(400),
+  composition: z.string().max(400),
+  avoid: z.string().max(400),
+});
+
 export const typographyStepSchema = z.object({
   name: z.string(),
   fontFamily: z.string(),
@@ -152,6 +169,9 @@ export const designConfigSchema = z.object({
   layoutPatterns: layoutPatternSchema,
   uiStyle: uiStyleSchema,
 
+  dials: dialsSchema,
+  pages: z.array(pageBriefSchema).max(12),
+
   elevation: z.enum(["flat", "tonal-layers", "subtle-shadow"]),
 
   components: z.object({
@@ -187,4 +207,7 @@ export type SiteType = z.infer<typeof siteTypeSchema>;
 export type BrandVoice = z.infer<typeof brandVoiceSchema>;
 export type TypographyStep = z.infer<typeof typographyStepSchema>;
 export type Breakpoint = z.infer<typeof breakpointSchema>;
+export type DialLevel = z.infer<typeof dialLevelSchema>;
+export type Dials = z.infer<typeof dialsSchema>;
+export type PageBrief = z.infer<typeof pageBriefSchema>;
 export type DesignConfig = z.infer<typeof designConfigSchema>;

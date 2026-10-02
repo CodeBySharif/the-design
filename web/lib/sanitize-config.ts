@@ -53,6 +53,11 @@ export function sanitizeDesignConfig(raw: unknown): DesignConfig {
   const name =
     typeof input.name === "string" && input.name.trim().length > 0 ? input.name.trim() : defaults.name;
 
+  const dialLevel = (value: unknown, fallback: 1 | 2 | 3): 1 | 2 | 3 =>
+    value === 1 || value === 2 || value === 3 ? value : fallback;
+
+  const inputDials = input.dials && typeof input.dials === "object" ? input.dials : undefined;
+
   const merged: DesignConfig = {
     ...defaults,
     ...input,
@@ -87,6 +92,27 @@ export function sanitizeDesignConfig(raw: unknown): DesignConfig {
     layout: { ...defaults.layout, ...input.layout },
     layoutPatterns: { ...defaults.layoutPatterns, ...input.layoutPatterns },
     uiStyle,
+    dials: {
+      energy: dialLevel(inputDials?.energy, defaults.dials.energy),
+      rhythm: dialLevel(inputDials?.rhythm, defaults.dials.rhythm),
+      motion: dialLevel(inputDials?.motion, defaults.dials.motion),
+    },
+    pages:
+      Array.isArray(input.pages) && input.pages.length > 0
+        ? input.pages
+            .filter((p): p is DesignConfig["pages"][number] =>
+              Boolean(p && typeof p === "object" && typeof p.id === "string" && typeof p.name === "string"),
+            )
+            .map((p) => ({
+              id: String(p.id).slice(0, 80),
+              name: String(p.name).slice(0, 80),
+              role: typeof p.role === "string" ? p.role.slice(0, 80) : "",
+              intent: typeof p.intent === "string" ? p.intent.slice(0, 400) : "",
+              composition: typeof p.composition === "string" ? p.composition.slice(0, 400) : "",
+              avoid: typeof p.avoid === "string" ? p.avoid.slice(0, 400) : "",
+            }))
+            .slice(0, 12)
+        : defaults.pages,
     elevation: pickEnum(
       input.elevation,
       (v) => designConfigSchema.shape.elevation.safeParse(v),

@@ -2,6 +2,12 @@
 
 import type { DesignConfig } from "@/lib/schema";
 import { SITE_TYPE_OPTIONS } from "@/lib/site-types";
+import { getDefaultPagesForSiteType } from "@/lib/page-briefs";
+import {
+  getSuggestedDontsForIdentity,
+  getSuggestedDosForIdentity,
+} from "@/lib/defaults";
+import { StepIntro } from "@/components/wizard/step-intro";
 
 interface SiteTypeStepProps {
   config: DesignConfig;
@@ -9,27 +15,31 @@ interface SiteTypeStepProps {
 }
 
 export function SiteTypeStep({ config, onChange }: SiteTypeStepProps) {
-  return (
-    <div className="space-y-8">
-      <div className="max-w-xl">
-        <p className="ds-overline">Step 1</p>
-        <h2 className="ds-headline mt-1">What are you building?</h2>
-        <p className="ds-body-sm ds-text-muted mt-2">
-          Choose a site type. This sets the product context in DESIGN.md and shapes the live
-          preview layout.
-        </p>
-      </div>
+  const select = (siteType: DesignConfig["siteType"]) => {
+    onChange({
+      siteType,
+      pages: getDefaultPagesForSiteType(siteType),
+      dos: getSuggestedDosForIdentity(config),
+      donts: getSuggestedDontsForIdentity(config),
+    });
+  };
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+  return (
+    <div className="ds-step-stack">
+      <StepIntro
+        overline="Site"
+        title="What are you building?"
+        description="Pick a site type. It sets product context in DESIGN.md and shapes the live preview."
+      />
+
+      <div className="ds-option-grid">
         {SITE_TYPE_OPTIONS.map((option) => (
           <button
             key={option.id}
             type="button"
-            onClick={() => onChange({ siteType: option.id })}
-            className={`rounded-xl border p-4 text-left transition-colors ${
-              config.siteType === option.id
-                ? "ds-tag-active border-transparent"
-                : "ds-tag-inactive"
+            onClick={() => select(option.id)}
+            className={`ds-option-tile ${
+              config.siteType === option.id ? "ds-option-tile-active" : ""
             }`}
           >
             <p className="font-semibold">{option.label}</p>

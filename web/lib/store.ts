@@ -44,6 +44,10 @@ export const useDesignStore = create<DesignStore>()(
           layoutPatterns: partial.layoutPatterns
             ? { ...state.config.layoutPatterns, ...partial.layoutPatterns }
             : state.config.layoutPatterns,
+          dials: partial.dials
+            ? { ...state.config.dials, ...partial.dials }
+            : state.config.dials,
+          pages: partial.pages ?? state.config.pages,
           spacing: partial.spacing
             ? { ...state.config.spacing, ...partial.spacing }
             : state.config.spacing,

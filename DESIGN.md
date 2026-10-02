@@ -1,7 +1,7 @@
 ---
 version: alpha
-name: My Design System
-description: A clean, modern design system built for product websites with clear hierarchy and accessible contrast.
+name: The Design
+description: A teal editorial shell for building DESIGN.md files with clear hierarchy and accessible contrast.
 siteType: marketing
 colors:
   primary: '#0d9488'
@@ -181,19 +181,27 @@ layoutPatterns:
   bento: false
   sidebar: false
   split: false
+dials:
+  energy: 2
+  rhythm: 2
+  motion: 2
 ---
 
 ## Overview
 
-**My Design System** — A clean, modern design system built for product websites with clear hierarchy and accessible contrast.
+**The Design** - A teal editorial shell for building DESIGN.md files with clear hierarchy and accessible contrast.
 
-Designed as a **marketing** experience. Tone is **clear and direct** with a light, minimal, product focused visual register. Structure pages around a hero band, feature cards, and a single primary CTA per viewport.
+Built for **product designers and AI coding agents** as a **marketing** experience. Tone is **clear and direct** with a light, editorial visual register.
 
-**UI style:** Flat design — clean surfaces, token-driven color, and minimal decorative depth.
+**Design read:** Reading this as: design-system builder for product designers, in a teal editorial register, dial ENERGY 2 / RHYTHM 2 / MOTION 2.
+
+**Dials:** ENERGY 2 (Balanced) / RHYTHM 2 (Mostly consistent) / MOTION 2 (Scroll and transitions).
+
+**UI style:** Flat design: clean surfaces, token-driven color, and minimal decorative depth.
 
 **Layout patterns:** hero section.
 
-The system anchors on `{colors.canvas}` (`#f0fdfa`) as the primary surface, with `{colors.ink}` (`#134e4a`) for headlines and core text. The brand accent `{colors.primary}` (`#0d9488`) is reserved for the single most important action per screen — never used decoratively as a large background fill.
+The system anchors on `{colors.canvas}` (`#f0fdfa`) as the primary surface, with `{colors.ink}` (`#134e4a`) for headlines and core text. The brand accent `{colors.primary}` (`#0d9488`) is reserved for the single most important action per screen, never used decoratively as a large background fill.
 
 Display typography uses **Libre Baskerville** for hero and headline moments. Body copy uses **Raleway** for long-form readability. The type scale follows a **editorial** rhythm with 11 defined steps from display to caption.
 

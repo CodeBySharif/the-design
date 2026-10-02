@@ -20,13 +20,13 @@ export function BuilderFooter({ left, hint, back, forward }: BuilderFooterProps)
     >
       {hint && (
         <p
-          className="ds-container px-4 pt-2 text-right text-xs sm:px-8"
+          className="ds-shell pt-2 text-right text-xs"
           style={{ color: "var(--color-error)" }}
         >
           {hint}
         </p>
       )}
-      <div className="ds-container flex flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-8">
+      <div className="ds-shell flex flex-wrap items-center justify-between gap-3 py-3">
         <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">{left}</div>
         <div className="flex shrink-0 items-center gap-2">
           {back}

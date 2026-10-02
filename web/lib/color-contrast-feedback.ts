@@ -47,9 +47,9 @@ function formatPairMessage(
       : `${b} with ${a}`;
 
   if (pass) {
-    return `Passes WCAG AA (4.5:1) — ${role} · ${ratioText}`;
+    return `Passes WCAG AA (4.5:1) - ${role} · ${ratioText}`;
   }
-  return `Fails WCAG AA (4.5:1) — ${role} · ${ratioText} — adjust ${a} or ${b}`;
+  return `Fails WCAG AA (4.5:1) - ${role} · ${ratioText} - adjust ${a} or ${b}`;
 }
 
 export function getFailingPairSummaries(colors: DesignConfig["colors"]): string[] {
@@ -58,6 +58,6 @@ export function getFailingPairSummaries(colors: DesignConfig["colors"]): string[
     .map((pair) => {
       const { ratio } = pairContrastStatus(pair);
       const ratioText = ratio !== null ? `${ratio.toFixed(2)}:1` : "?";
-      return `${pair.label} (${ratioText}) — change ${pair.colorKeys.map((k) => COLOR_LABELS[k].label).join(" or ")}`;
+      return `${pair.label} (${ratioText}) - change ${pair.colorKeys.map((k) => COLOR_LABELS[k].label).join(" or ")}`;
     });
 }

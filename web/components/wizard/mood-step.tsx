@@ -5,6 +5,7 @@ import { ThemePreviewMini } from "@/components/theme/theme-preview-mini";
 import { themePresetMatchesConfig } from "@/lib/theme-generate";
 import { useDesignStore } from "@/lib/store";
 import { THEME_PRESETS, applyThemePreset, type ThemePreset } from "@/lib/theme-presets";
+import { StepIntro } from "@/components/wizard/step-intro";
 
 interface MoodStepProps {
   config: DesignConfig;
@@ -21,21 +22,18 @@ export function MoodStep({ config, onChange }: MoodStepProps) {
     onChange(applyThemePreset(preset, config));
   };
 
-  return (
-    <div className="space-y-8">
-      <div className="max-w-xl">
-        <p className="ds-overline">Step 3</p>
-        <h2 className="ds-headline mt-1">Pick a theme</h2>
-        <p className="ds-body-sm ds-text-muted mt-2">
-          {seedColors.length > 0
-            ? "Templates below are built from your colors. Use Generate in the footer for a fresh batch."
-            : isGenerated
-              ? "Generated mix-and-match templates — Randomize for another set."
-              : "Choose a starting template, or add your colors in the footer and hit Generate."}
-        </p>
-      </div>
+  const description =
+    seedColors.length > 0
+      ? "Templates below are built from your colors. Use Generate in the footer for a fresh batch."
+      : isGenerated
+        ? "Generated mix-and-match templates. Randomize for another set."
+        : "Choose a starting template, or add your colors in the footer and hit Generate.";
 
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-4">
+  return (
+    <div className="ds-step-stack">
+      <StepIntro overline="Mood" title="Pick a theme" description={description} />
+
+      <div className="ds-theme-grid">
         {templates.map((preset) => {
           const selected = themePresetMatchesConfig(preset, config);
           return (

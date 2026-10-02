@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect, type CSSProperties, type ReactNode } from "react";
-import type { DesignConfig, SiteType } from "@/lib/schema";
+import type { DesignConfig } from "@/lib/schema";
 import { configToCssVars, googleFontsUrl } from "@/lib/css-vars";
 import { getUiStylePreview, usesSharpCorners } from "@/lib/ui-styles";
-import { siteTypeLabel } from "@/lib/site-types";
 import { StyleSignature, styleSignatureLabel } from "./style-signature";
 
 interface PreviewFrameProps {
@@ -223,40 +222,8 @@ function TypographySection({ config }: { config: DesignConfig }) {
   );
 }
 
-function navFor(siteType: SiteType): string[] {
-  const map: Record<SiteType, string[]> = {
-    marketing: ["Product", "Customers", "Pricing"],
-    "landing-page": ["Product", "Pricing"],
-    docs: ["Guides", "API", "SDK"],
-    dashboard: ["Overview", "Metrics", "Alerts"],
-    "e-commerce": ["Shop", "Collections", "Cart"],
-    portfolio: ["Work", "About", "Contact"],
-    "saas-app": ["Inbox", "Projects", "Automations"],
-    blog: ["Writing", "Topics", "Newsletter"],
-    auth: ["Help"],
-    admin: ["Users", "Roles", "Audit"],
-    "mobile-app": ["Home", "Search", "You"],
-    marketplace: ["Browse", "Sellers", "Orders"],
-    social: ["Feed", "Messages", "Profile"],
-    education: ["Learn", "Courses", "Certificates"],
-    booking: ["Book", "Schedule", "Account"],
-    news: ["Top", "World", "Opinion"],
-    community: ["Forum", "Groups", "Events"],
-    agency: ["Services", "Work", "Contact"],
-    fintech: ["Accounts", "Transfer", "Cards"],
-    healthcare: ["Care", "Records", "Visits"],
-    "real-estate": ["Buy", "Rent", "Saved"],
-    "food-delivery": ["Menus", "Orders", "Account"],
-    travel: ["Flights", "Stays", "Trips"],
-    music: ["Listen", "Library", "Radio"],
-    podcast: ["Shows", "Episodes", "Queue"],
-    crypto: ["Wallet", "Swap", "Activity"],
-    nonprofit: ["Cause", "Impact", "Donate"],
-    event: ["Schedule", "Speakers", "Tickets"],
-    "hr-portal": ["People", "Time off", "Policies"],
-    legal: ["Practices", "Matters", "Contact"],
-  };
-  return map[siteType];
+function navFor(): string[] {
+  return ["Overview", "Records", "Settings"];
 }
 
 export function PreviewFrame({ config, showHeader = true }: PreviewFrameProps) {
@@ -325,17 +292,17 @@ export function PreviewFrame({ config, showHeader = true }: PreviewFrameProps) {
           <p className="text-xs font-medium ds-text-muted">Live Preview</p>
           <div className="flex flex-wrap justify-end gap-1">
             <span
-              className="rounded-full px-2 py-0.5 text-[10px] font-medium"
+              className="rounded-md px-2 py-0.5 text-[10px] font-medium"
               style={{
                 background: "var(--color-canvas)",
                 color: "var(--color-ink)",
                 border: "1px solid var(--color-hairline)",
               }}
             >
-              {siteTypeLabel(config.siteType)}
+              System template
             </span>
             <span
-              className="rounded-full px-2 py-0.5 text-[10px] font-medium capitalize"
+              className="rounded-md px-2 py-0.5 text-[10px] font-medium capitalize"
               style={{
                 background: "var(--color-primary)",
                 color: "var(--color-on-primary)",
@@ -353,29 +320,27 @@ export function PreviewFrame({ config, showHeader = true }: PreviewFrameProps) {
           style={StyleSignature({ style: config.uiStyle, colors: config.colors })}
         >
           <span>{styleSignatureLabel(config.uiStyle)} style</span>
-          <span style={{ opacity: 0.75 }}>{siteTypeLabel(config.siteType)}</span>
+          <span style={{ opacity: 0.75 }}>Shared tokens</span>
         </div>
 
-        {config.siteType !== "auth" && (
+        <div
+          className="flex items-center justify-between px-4"
+          style={previewNavStyle(uiStyle.nav)}
+        >
+          <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 14 }}>
+            {config.name}
+          </span>
           <div
-            className="flex items-center justify-between px-4"
-            style={previewNavStyle(uiStyle.nav)}
+            className="flex gap-4 text-sm"
+            style={{ color: uiStyle.nav.color ?? "var(--color-ink-muted)" }}
           >
-            <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 14 }}>
-              {config.name}
-            </span>
-            <div
-              className="flex gap-4 text-sm"
-              style={{ color: uiStyle.nav.color ?? "var(--color-ink-muted)" }}
-            >
-              {navFor(config.siteType).map((link) => (
-                <span key={link}>{link}</span>
-              ))}
-            </div>
+            {navFor().map((link) => (
+              <span key={link}>{link}</span>
+            ))}
           </div>
-        )}
+        </div>
 
-        <SitePreview {...ctx} />
+        <SystemTemplatePreview {...ctx} />
         <TypographySection config={config} />
       </div>
     </div>
@@ -392,6 +357,161 @@ type PreviewCtx = {
 };
 
 function SitePreview(ctx: PreviewCtx) {
+  return <SystemTemplatePreview {...ctx} />;
+}
+
+function SystemTemplatePreview(ctx: PreviewCtx) {
+  const { cardBase, btnRadius, uiStyle, config, bodyStep } = ctx;
+  return (
+    <>
+      <Section title="Sign in">
+        <div
+          style={{
+            ...cardBase,
+            background: "var(--color-canvas-soft)",
+            maxWidth: 380,
+            margin: "0 auto",
+          }}
+        >
+          <p style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 22 }}>
+            Welcome back
+          </p>
+          <p className="mt-1 text-sm" style={{ color: "var(--color-ink-muted)" }}>
+            Same tokens as the rest of the product. Different layout for focus.
+          </p>
+          <label className="mb-1 mt-4 block text-sm font-medium">Email</label>
+          <input
+            readOnly
+            placeholder="you@example.com"
+            style={previewInputStyle(uiStyle.input, {
+              width: "100%",
+              padding: "12px 14px",
+              borderRadius: btnRadius === "0" ? 0 : 8,
+              background: "var(--color-canvas)",
+            })}
+          />
+          <label className="mb-1 mt-3 block text-sm font-medium">Password</label>
+          <input
+            readOnly
+            placeholder="••••••••"
+            style={previewInputStyle(uiStyle.input, {
+              width: "100%",
+              padding: "12px 14px",
+              borderRadius: btnRadius === "0" ? 0 : 8,
+              background: "var(--color-canvas)",
+            })}
+          />
+          <div className="mt-4">
+            <PrimaryButton label="Continue" btnRadius={btnRadius} uiStyle={uiStyle} full />
+          </div>
+        </div>
+      </Section>
+
+      <Section title="List" soft>
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap gap-2">
+            {["All", "Active", "Archived"].map((f, i) => (
+              <span
+                key={f}
+                className="text-xs font-medium"
+                style={{
+                  padding: "5px 10px",
+                  borderRadius: 6,
+                  background: i === 0 ? "var(--color-primary)" : "var(--color-canvas)",
+                  color: i === 0 ? "var(--color-on-primary)" : "var(--color-ink)",
+                  border: "1px solid var(--color-hairline)",
+                }}
+              >
+                {f}
+              </span>
+            ))}
+          </div>
+          <PrimaryButton label="New record" btnRadius={btnRadius} uiStyle={uiStyle} />
+        </div>
+        <div style={{ ...cardBase, background: "var(--color-canvas)", padding: 0, overflow: "hidden" }}>
+          <table className="w-full text-sm">
+            <thead>
+              <tr style={{ background: "var(--color-canvas-soft)", color: "var(--color-ink-muted)" }}>
+                <th className="px-3 py-2 text-left">Name</th>
+                <th className="px-3 py-2 text-left">Status</th>
+                <th className="px-3 py-2 text-left">Updated</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                ["Northwind ops", "Active", "Today"],
+                ["Atlas billing", "Active", "Yesterday"],
+                ["Cove archive", "Archived", "Mar 12"],
+              ].map(([name, status, updated]) => (
+                <tr key={name} style={{ borderTop: "1px solid var(--color-hairline)" }}>
+                  <td className="px-3 py-2 font-medium">{name}</td>
+                  <td className="px-3 py-2">
+                    <span
+                      className="text-[10px] font-semibold"
+                      style={{
+                        padding: "2px 8px",
+                        borderRadius: 6,
+                        background:
+                          status === "Active"
+                            ? "color-mix(in srgb, var(--color-success) 18%, transparent)"
+                            : "var(--color-canvas-soft)",
+                        color: "var(--color-ink)",
+                      }}
+                    >
+                      {status}
+                    </span>
+                  </td>
+                  <td className="px-3 py-2" style={{ color: "var(--color-ink-muted)" }}>
+                    {updated}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Section>
+
+      <Section title="Detail">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <p className="text-xs uppercase tracking-wide" style={{ color: "var(--color-ink-subtle)" }}>
+              Record
+            </p>
+            <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 28 }}>
+              Northwind ops
+            </h3>
+            <p
+              className="mt-1"
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: bodyStep?.fontSize ?? "16px",
+                color: "var(--color-ink-muted)",
+              }}
+            >
+              {firstSentence(config.description)}
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <SecondaryButton label="Edit" btnRadius={btnRadius} uiStyle={uiStyle} />
+            <PrimaryButton label="Save" btnRadius={btnRadius} uiStyle={uiStyle} />
+          </div>
+        </div>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          {["Owner", "Plan", "Region", "Created"].map((label) => (
+            <div key={label} style={{ ...cardBase, background: "var(--color-canvas-soft)", padding: 14 }}>
+              <p className="text-xs" style={{ color: "var(--color-ink-subtle)" }}>
+                {label}
+              </p>
+              <p className="mt-1 text-sm font-medium">Sample value</p>
+            </div>
+          ))}
+        </div>
+      </Section>
+    </>
+  );
+}
+
+function LegacySitePreview(ctx: PreviewCtx) {
   switch (ctx.config.siteType) {
     case "marketing":
       return <MarketingPreview {...ctx} />;
@@ -457,6 +577,8 @@ function SitePreview(ctx: PreviewCtx) {
       return <MarketingPreview {...ctx} />;
   }
 }
+
+void LegacySitePreview;
 
 function HeroBand({
   ctx,

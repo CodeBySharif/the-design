@@ -6,7 +6,6 @@ import { SiteButton } from "@/components/site/site-button";
 import { BuilderHeader } from "@/components/builder/builder-header";
 import { BuilderFooter } from "@/components/builder/builder-footer";
 import { STEPS } from "@/components/ui/step-indicator";
-import { SiteTypeStep } from "@/components/wizard/site-type-step";
 import { UiStyleStep } from "@/components/wizard/ui-style-step";
 import { MoodStep } from "@/components/wizard/mood-step";
 import { ColorsStep, colorsStepCanContinue } from "@/components/wizard/colors-step";
@@ -25,6 +24,11 @@ import {
 } from "@/lib/theme-generate";
 import { PREVIEW_CHANNEL_NAME, type PreviewMessage } from "@/lib/preview-sync";
 
+const STYLE_STEP = 0;
+const MOOD_STEP = 1;
+const COLORS_STEP = 2;
+const TYPOGRAPHY_STEP = 3;
+
 export default function BuilderPage() {
   const {
     config,
@@ -42,8 +46,6 @@ export default function BuilderPage() {
   const [previewOpen, setPreviewOpen] = useState(false);
 
   useEffect(() => {
-    // Every builder visit starts fresh at Site (step 1). Remove data saved by
-    // older versions that used Zustand's localStorage persistence.
     window.localStorage.removeItem("design-md-builder");
     useDesignStore.getState().reset();
 
@@ -78,11 +80,11 @@ export default function BuilderPage() {
     }
   }, [step, setStep]);
 
-  const canContinue = step !== 3 || colorsStepCanContinue(config);
-  const colorFailures = step === 3 ? countFailingPairs(config.colors) : 0;
+  const canContinue = step !== COLORS_STEP || colorsStepCanContinue(config);
+  const colorFailures = step === COLORS_STEP ? countFailingPairs(config.colors) : 0;
 
   const continueHint =
-    step === 3 && !canContinue
+    step === COLORS_STEP && !canContinue
       ? "Fix contrast issues before continuing (or use Auto-fix)."
       : undefined;
 
@@ -147,17 +149,15 @@ export default function BuilderPage() {
   const renderStep = () => {
     const props = { config, onChange: updateConfig };
     switch (step) {
-      case 0:
-        return <SiteTypeStep {...props} />;
-      case 1:
+      case STYLE_STEP:
         return <UiStyleStep {...props} />;
-      case 2:
+      case MOOD_STEP:
         return <MoodStep {...props} />;
-      case 3:
+      case COLORS_STEP:
         return <ColorsStep {...props} />;
-      case 4:
+      case TYPOGRAPHY_STEP:
         return <TypographyStep {...props} />;
-      case 5:
+      case 4:
         return (
           <ReviewExportStep
             config={config}
@@ -174,7 +174,7 @@ export default function BuilderPage() {
   };
 
   const footerLeft = () => {
-    if (step === 2) {
+    if (step === MOOD_STEP) {
       return (
         <>
           <SeedColorBar className="mr-2 border-r pr-4 ds-divider" />
@@ -199,7 +199,7 @@ export default function BuilderPage() {
       );
     }
 
-    if (step === 3 && colorFailures > 0) {
+    if (step === COLORS_STEP && colorFailures > 0) {
       return (
         <SiteButton
           variant="secondary"
@@ -213,7 +213,7 @@ export default function BuilderPage() {
       );
     }
 
-    if (step === 4) {
+    if (step === TYPOGRAPHY_STEP) {
       return (
         <>
           <SiteButton
@@ -262,7 +262,7 @@ export default function BuilderPage() {
         />
 
         <main className="min-h-0 flex-1 overflow-y-auto">
-          <div className="ds-container py-8">{renderStep()}</div>
+          <div className="ds-shell py-6 sm:py-8">{renderStep()}</div>
         </main>
 
         <BuilderFooter

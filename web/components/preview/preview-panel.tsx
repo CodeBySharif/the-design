@@ -77,7 +77,7 @@ export function PreviewPanel({ config, open, onClose }: PreviewPanelProps) {
           aria-labelledby="preview-title"
         >
           <PreviewScale
-            watchKey={`${config.siteType}-${config.uiStyle}-${config.displayFont}-${config.typeScalePreset}-${config.tagline}-${config.name}`}
+            watchKey={`${config.uiStyle}-${config.displayFont}-${config.typeScalePreset}-${config.tagline}-${config.name}`}
           >
             <PreviewFrame config={config} showHeader={false} />
           </PreviewScale>

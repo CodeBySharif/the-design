@@ -13,6 +13,7 @@ import {
   pairContrastStatus,
   passesAllContrastChecks,
 } from "@/lib/contrast-pairs";
+import { StepIntro } from "@/components/wizard/step-intro";
 
 interface ColorsStepProps {
   config: DesignConfig;
@@ -51,19 +52,16 @@ export function ColorsStep({ config, onChange }: ColorsStepProps) {
   const failingSummaries = getFailingPairSummaries(config.colors);
 
   return (
-    <div className="space-y-6">
-      <div>
-        <p className="ds-overline">Step 4</p>
-        <h2 className="ds-headline mt-1">Colors</h2>
-        <p className="ds-body-sm ds-text-muted mt-1">
-          Each color shows which pairings pass or fail WCAG AA (4.5:1). Fix failures before
-          continuing.
-        </p>
-      </div>
+    <div className="ds-step-stack">
+      <StepIntro
+        overline="Colors"
+        title="Tune the palette"
+        description="Each color shows which pairings pass or fail WCAG AA (4.5:1). Fix failures before continuing."
+      />
 
       {failing > 0 ? (
         <div
-          className="space-y-3 rounded-lg border px-4 py-3 text-sm"
+          className="space-y-3 rounded-md border px-4 py-3 text-sm"
           style={{
             borderColor: "var(--color-error)",
             background: "color-mix(in srgb, var(--color-error) 12%, transparent)",
@@ -85,7 +83,7 @@ export function ColorsStep({ config, onChange }: ColorsStepProps) {
         </div>
       ) : (
         <div
-          className="rounded-lg border px-4 py-3 text-sm"
+          className="rounded-md border px-4 py-3 text-sm"
           style={{
             borderColor: "var(--color-success)",
             background: "color-mix(in srgb, var(--color-success) 10%, transparent)",
@@ -96,45 +94,47 @@ export function ColorsStep({ config, onChange }: ColorsStepProps) {
         </div>
       )}
 
-      {COLOR_GROUPS.map((group) => (
-        <section
-          key={group.id}
-          className="space-y-4 rounded-xl border p-4"
-          style={{
-            borderColor: "var(--color-hairline)",
-            background: "var(--color-canvas-soft)",
-          }}
-        >
-          <h3 className="ds-body-sm font-semibold">{group.title}</h3>
-          <div className="grid gap-5 sm:grid-cols-2">
-            {group.keys.map((key) => {
-              const meta = COLOR_LABELS[key];
-              const feedback = getContrastFeedbackForColor(key, config.colors);
-              return (
-                <ColorInput
-                  key={key}
-                  label={meta.label}
-                  description={meta.description}
-                  value={config.colors[key]}
-                  onChange={(v) => updateColor(key, v)}
-                  contrastAgainst={contrastAgainstForKey(key, config.colors)}
-                  feedback={feedback}
-                />
-              );
-            })}
-          </div>
-        </section>
-      ))}
+      <div className="ds-color-groups">
+        {COLOR_GROUPS.map((group) => (
+          <section
+            key={group.id}
+            className="space-y-4 rounded-md border p-4"
+            style={{
+              borderColor: "var(--color-hairline)",
+              background: "var(--color-canvas-soft)",
+            }}
+          >
+            <h3 className="ds-body-sm font-semibold">{group.title}</h3>
+            <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+              {group.keys.map((key) => {
+                const meta = COLOR_LABELS[key];
+                const feedback = getContrastFeedbackForColor(key, config.colors);
+                return (
+                  <ColorInput
+                    key={key}
+                    label={meta.label}
+                    description={meta.description}
+                    value={config.colors[key]}
+                    onChange={(v) => updateColor(key, v)}
+                    contrastAgainst={contrastAgainstForKey(key, config.colors)}
+                    feedback={feedback}
+                  />
+                );
+              })}
+            </div>
+          </section>
+        ))}
+      </div>
 
       <section className="ds-panel space-y-3">
         <h3 className="ds-body-sm font-semibold">All pairing checks</h3>
-        <div className="space-y-2">
+        <div className="grid gap-2 md:grid-cols-2">
           {pairs.map((pair) => {
             const { ratio, pass } = pairContrastStatus(pair);
             return (
               <div
                 key={pair.id}
-                className="flex items-center justify-between gap-3 rounded-lg px-3 py-2 text-sm"
+                className="flex items-center justify-between gap-3 rounded-md px-3 py-2 text-sm"
                 style={{
                   background: pass
                     ? pair.background

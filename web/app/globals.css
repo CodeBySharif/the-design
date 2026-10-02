@@ -21,6 +21,185 @@ body {
   padding-inline: var(--spacing-xl, 32px);
 }
 
+/* Full-bleed builder chrome: edge padding only, no centered max-width */
+.ds-shell {
+  width: 100%;
+  padding-inline: clamp(1rem, 2.5vw, 2.5rem);
+}
+
+.ds-step-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.ds-step-intro {
+  display: grid;
+  gap: 0.75rem 2rem;
+  align-items: end;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid var(--color-hairline);
+}
+
+@media (min-width: 900px) {
+  .ds-step-intro {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  }
+}
+
+.ds-step-intro-copy {
+  max-width: 42rem;
+}
+
+@media (min-width: 900px) {
+  .ds-step-intro-copy {
+    justify-self: end;
+    text-align: right;
+    max-width: none;
+  }
+}
+
+.ds-option-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (min-width: 768px) {
+  .ds-option-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1100px) {
+  .ds-option-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1400px) {
+  .ds-option-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+.ds-theme-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (min-width: 768px) {
+  .ds-theme-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1100px) {
+  .ds-theme-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1400px) {
+  .ds-theme-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+.ds-option-tile {
+  border: 1px solid var(--color-hairline);
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  border-radius: var(--rounded-md);
+  padding: 1rem;
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.ds-option-tile:hover {
+  border-color: color-mix(in srgb, var(--color-primary) 45%, var(--color-hairline));
+}
+
+.ds-option-tile-active {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  border-color: transparent;
+}
+
+.ds-color-groups {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 1200px) {
+  .ds-color-groups {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.ds-type-tools {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 1100px) {
+  .ds-type-tools {
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+.ds-export-layout {
+  display: grid;
+  gap: 1.25rem;
+}
+
+@media (min-width: 1100px) {
+  .ds-export-layout {
+    grid-template-columns: minmax(0, 1.4fr) minmax(18rem, 0.8fr);
+    align-items: start;
+  }
+}
+
+.ds-step-rail {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.35rem;
+}
+
+.ds-step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+  min-height: 2.75rem;
+  padding: 0.45rem 0.55rem;
+  border-radius: var(--rounded-md);
+  border: 1px solid transparent;
+  text-align: left;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.ds-step-index {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.04em;
+  opacity: 0.7;
+}
+
+.ds-step-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+@media (max-width: 720px) {
+  .ds-step-rail {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
 /* Typography — families from DESIGN.md tokens */
 .ds-display-xl {
   font-family: var(--font-display);
@@ -225,18 +404,19 @@ body {
 .ds-step-done {
   background: var(--color-canvas-soft);
   color: var(--color-ink);
+  border-color: var(--color-hairline);
 }
 
 .ds-step-pending {
   background: var(--color-canvas);
   color: var(--color-ink-subtle);
-  border: 1px solid var(--color-hairline);
+  border-color: var(--color-hairline);
 }
 
 .ds-panel {
   background: var(--color-canvas);
   border: 1px solid var(--color-hairline);
-  border-radius: var(--rounded-lg);
+  border-radius: var(--rounded-md);
   padding: var(--spacing-xl);
 }
 
@@ -272,13 +452,14 @@ body {
 .ds-tag-active {
   background: var(--color-primary);
   color: var(--color-on-primary);
-  border-radius: var(--rounded-pill);
+  border-radius: var(--rounded-md);
 }
 
 .ds-tag-inactive {
   background: var(--color-canvas-soft);
   color: var(--color-ink);
-  border-radius: var(--rounded-pill);
+  border-radius: var(--rounded-md);
+  border: 1px solid var(--color-hairline);
 }
 
 .ds-surface-soft {

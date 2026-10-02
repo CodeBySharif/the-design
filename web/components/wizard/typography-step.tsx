@@ -10,6 +10,7 @@ import { useDesignStore } from "@/lib/store";
 import { useGoogleFonts } from "@/lib/use-google-fonts";
 import { FONT_PAIRINGS, applyFontPairing } from "@/lib/theme-presets";
 import { getTypographyStep, typographyStyle } from "@/lib/typography-helpers";
+import { StepIntro } from "@/components/wizard/step-intro";
 
 interface TypographyStepProps {
   config: DesignConfig;
@@ -61,18 +62,18 @@ export function TypographyStep({ config, onChange }: TypographyStepProps) {
   const buttonMd = getTypographyStep(config, "button-md");
 
   return (
-    <div className="space-y-6">
-      <div>
-        <p className="ds-overline">Step 5</p>
-        <h2 className="ds-headline mt-1">Typography</h2>
-        <p className="ds-body-sm ds-text-muted mt-1">
-          {isMixedBatch
-            ? "12 generated combos — use Randomize in the footer for a new set."
-            : "12 curated pairings — use Randomize in the footer for new combos."}
-        </p>
-      </div>
+    <div className="ds-step-stack">
+      <StepIntro
+        overline="Typography"
+        title="Choose type"
+        description={
+          isMixedBatch
+            ? "Generated combos below. Use Randomize in the footer for a new set."
+            : "Curated pairings below. Use Randomize in the footer for new combos."
+        }
+      />
 
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-4">
+      <div className="ds-theme-grid">
         {pairings.map((pair) => (
           <FontPairingCard
             key={pair.id}
@@ -83,57 +84,56 @@ export function TypographyStep({ config, onChange }: TypographyStepProps) {
         ))}
       </div>
 
-      <details className="ds-surface-soft rounded-lg p-4">
-        <summary className="ds-body-sm cursor-pointer font-semibold">Custom fonts</summary>
-        <div className="mt-4 grid gap-6 sm:grid-cols-3">
-          <FontSelect
-            label="Display font"
-            value={config.displayFont}
-            onChange={(displayFont) => rebuild({ displayFont })}
-          />
-          <FontSelect
-            label="Body font"
-            value={config.bodyFont}
-            onChange={(bodyFont) => rebuild({ bodyFont })}
-          />
-          <FontSelect
-            label="Mono font"
-            value={config.monoFont}
-            onChange={(monoFont) => rebuild({ monoFont })}
-          />
-        </div>
-      </details>
+      <div className="ds-type-tools">
+        <details className="ds-surface-soft rounded-md p-4">
+          <summary className="ds-body-sm cursor-pointer font-semibold">Custom fonts</summary>
+          <div className="mt-4 grid gap-6 sm:grid-cols-3">
+            <FontSelect
+              label="Display font"
+              value={config.displayFont}
+              onChange={(displayFont) => rebuild({ displayFont })}
+            />
+            <FontSelect
+              label="Body font"
+              value={config.bodyFont}
+              onChange={(bodyFont) => rebuild({ bodyFont })}
+            />
+            <FontSelect
+              label="Mono font"
+              value={config.monoFont}
+              onChange={(monoFont) => rebuild({ monoFont })}
+            />
+          </div>
+        </details>
 
-      <div className="space-y-2">
-        <label className="ds-label">Type scale</label>
-        <p className="ds-caption">
-          Controls font sizes in your export and live preview — compact is smaller, expressive is
-          larger.
-        </p>
-        <div className="flex flex-wrap gap-2">
-          {PRESETS.map((preset) => (
-            <button
-              key={preset}
-              type="button"
-              onClick={() => rebuild({ typeScalePreset: preset })}
-              className={`rounded-full px-4 py-2 text-sm capitalize ${
-                config.typeScalePreset === preset ? "ds-tag-active" : "ds-tag-inactive"
-              }`}
-            >
-              {preset}
-            </button>
-          ))}
+        <div className="space-y-2">
+          <label className="ds-label">Type scale</label>
+          <p className="ds-caption">
+            Controls font sizes in your export and live preview. Compact is smaller; expressive is
+            larger.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {PRESETS.map((preset) => (
+              <button
+                key={preset}
+                type="button"
+                onClick={() => rebuild({ typeScalePreset: preset })}
+                className={`rounded-md px-4 py-2 text-sm capitalize ${
+                  config.typeScalePreset === preset ? "ds-tag-active" : "ds-tag-inactive"
+                }`}
+              >
+                {preset}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
       <div
-        className="rounded-lg p-6"
+        className="rounded-md p-6 lg:p-8"
         style={{
           background: config.colors.canvas,
-          borderTop: `1px solid ${config.colors.hairline}`,
-          borderRight: `1px solid ${config.colors.hairline}`,
-          borderBottom: `1px solid ${config.colors.hairline}`,
-          borderLeft: `1px solid ${config.colors.hairline}`,
+          border: `1px solid ${config.colors.hairline}`,
           color: config.colors.ink,
         }}
       >
@@ -143,20 +143,14 @@ export function TypographyStep({ config, onChange }: TypographyStepProps) {
         >
           Full preview
         </p>
-        <p
-          className="mt-2"
-          style={typographyStyle(displayXl)}
-        >
+        <p className="mt-2" style={typographyStyle(displayXl)}>
           {config.name || "Display XL"}
         </p>
-        <p
-          className="mt-2"
-          style={typographyStyle(headline)}
-        >
-          Headline — {config.displayFont}
+        <p className="mt-2" style={typographyStyle(headline)}>
+          Headline · {config.displayFont}
         </p>
         <p
-          className="mt-3 max-w-md"
+          className="mt-3 max-w-2xl"
           style={{
             ...typographyStyle(bodyMd),
             color: config.colors.inkMuted,

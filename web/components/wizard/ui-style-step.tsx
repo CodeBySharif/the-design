@@ -2,6 +2,7 @@
 
 import type { DesignConfig } from "@/lib/schema";
 import { UI_STYLE_OPTIONS } from "@/lib/ui-styles";
+import { StepIntro } from "@/components/wizard/step-intro";
 
 interface UiStyleStepProps {
   config: DesignConfig;
@@ -10,26 +11,21 @@ interface UiStyleStepProps {
 
 export function UiStyleStep({ config, onChange }: UiStyleStepProps) {
   return (
-    <div className="space-y-8">
-      <div className="max-w-xl">
-        <p className="ds-overline">Step 2</p>
-        <h2 className="ds-headline mt-1">Pick a UI style</h2>
-        <p className="ds-body-sm ds-text-muted mt-2">
-          Choose the surface language — borders, shadows, and depth. Open Preview to see it on your
-          selected site type.
-        </p>
-      </div>
+    <div className="ds-step-stack">
+      <StepIntro
+        overline="Style"
+        title="Pick a UI style"
+        description="Choose the surface language: borders, shadows, and depth. This style applies across the whole product."
+      />
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="ds-option-grid">
         {UI_STYLE_OPTIONS.map((option) => (
           <button
             key={option.id}
             type="button"
             onClick={() => onChange({ uiStyle: option.id })}
-            className={`rounded-xl border p-4 text-left transition-colors ${
-              config.uiStyle === option.id
-                ? "ds-tag-active border-transparent"
-                : "ds-tag-inactive"
+            className={`ds-option-tile ${
+              config.uiStyle === option.id ? "ds-option-tile-active" : ""
             }`}
           >
             <p className="font-semibold">{option.label}</p>

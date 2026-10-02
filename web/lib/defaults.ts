@@ -1,6 +1,7 @@
 import type { DesignConfig } from "./schema";
 import { buildTypeScale } from "./type-scales";
-import { SITE_TYPE_DOS } from "./site-types";
+import { getSystemPages } from "./page-briefs";
+import { getAntislopDonts, getAntislopDos, mergeUnique } from "./antislop-defaults";
 
 const displayFont = "Inter";
 const bodyFont = "Inter";
@@ -10,8 +11,8 @@ export const defaultDesignConfig: DesignConfig = {
   name: "My Design System",
   tagline: "",
   description:
-    "A clean, modern design system built for product websites with clear hierarchy and accessible contrast.",
-  siteType: "marketing",
+    "A shared design system for product UI. Same color, type, and style tokens across every surface.",
+  siteType: "saas-app",
   audience: "",
   brandVoice: [],
   moodTags: ["light", "product-focused", "professional"],
@@ -67,12 +68,19 @@ export const defaultDesignConfig: DesignConfig = {
   },
 
   layoutPatterns: {
-    hero: true,
+    hero: false,
     bento: false,
-    sidebar: false,
+    sidebar: true,
     split: false,
   },
   uiStyle: "flat",
+
+  dials: {
+    energy: 2,
+    rhythm: 2,
+    motion: 1,
+  },
+  pages: getSystemPages(),
 
   elevation: "tonal-layers",
 
@@ -90,21 +98,26 @@ export const defaultDesignConfig: DesignConfig = {
     avatar: false,
     pricingCard: false,
     bentoGrid: false,
-    heroSection: true,
+    heroSection: false,
   },
   buttonStyle: "rounded-rect",
 
   dos: [
     "Use `{colors.primary}` only for the single most important action per screen.",
     "Maintain WCAG AA contrast ratios (4.5:1 for normal text).",
-    "Use the spacing scale consistently — avoid arbitrary pixel values.",
+    "Use the spacing scale consistently. Avoid arbitrary pixel values.",
     "Pair display weight headings with regular-weight body text.",
+    "Keep color, typography, radius, and component tokens identical across auth, list, detail, and settings.",
+    "Change layout and density per page job; do not invent a new visual brand per screen.",
+    ...getAntislopDos({ dials: { energy: 2, rhythm: 2, motion: 1 } }),
   ],
   donts: [
     "Don't use more than two font weights on a single screen.",
     "Don't mix rounded and sharp corners in the same view.",
     "Don't use the primary color as a large background fill.",
     "Don't introduce colors outside the defined palette.",
+    "Don't force landing-page hero patterns onto auth, list, or settings screens.",
+    ...getAntislopDonts(),
   ],
 
   breakpoints: [
@@ -123,10 +136,10 @@ export function getDefaultDosForMood(moodTags: DesignConfig["moodTags"]): string
     dos.push("Reserve the darkest canvas token as the anchor surface.");
   }
   if (moodTags.includes("editorial")) {
-    dos.push("Use generous whitespace and large display type for hero sections.");
+    dos.push("Use generous whitespace and large display type where hierarchy needs it.");
   }
   if (moodTags.includes("minimal")) {
-    dos.push("Limit decorative elements — let typography and spacing carry hierarchy.");
+    dos.push("Limit decorative elements. Let typography and spacing carry hierarchy.");
   }
   return dos;
 }
@@ -134,38 +147,42 @@ export function getDefaultDosForMood(moodTags: DesignConfig["moodTags"]): string
 export function getDefaultDontsForMood(moodTags: DesignConfig["moodTags"]): string[] {
   const donts = [...defaultDesignConfig.donts];
   if (moodTags.includes("dark")) {
-    donts.push("Don't use pure #000000 as the canvas — prefer a tinted dark surface.");
+    donts.push("Don't use pure #000000 as the canvas. Prefer a tinted dark surface.");
   }
   if (moodTags.includes("product-focused")) {
-    donts.push("Don't add atmospheric gradients that compete with product screenshots.");
+    donts.push("Don't add atmospheric gradients that compete with product content.");
   }
   return donts;
 }
 
 const BRAND_VOICE_DOS: Record<DesignConfig["brandVoice"][number], string> = {
-  formal: "Use restrained language and consistent typographic hierarchy — avoid casual phrasing.",
+  formal: "Use restrained language and consistent typographic hierarchy. Avoid casual phrasing.",
   friendly: "Favor approachable spacing and warm secondary surfaces over stark contrast.",
   technical: "Use mono labels for metadata and keep UI chrome precise and understated.",
-  bold: "Allow display type to dominate hero sections — one strong headline per screen.",
+  bold: "Allow display type to dominate key moments. One strong headline per screen.",
   calm: "Limit chromatic accents to one per view and favor muted ink steps for secondary text.",
   playful: "Use rounded shapes and accent color sparingly for moments of delight, not decoration.",
 };
 
 export function getSuggestedDosForIdentity(
-  config: Pick<DesignConfig, "moodTags" | "siteType" | "brandVoice">,
+  config: Pick<DesignConfig, "moodTags" | "brandVoice" | "dials">,
 ): string[] {
-  const dos = getDefaultDosForMood(config.moodTags);
-  const siteDo = SITE_TYPE_DOS[config.siteType];
-  if (siteDo && !dos.includes(siteDo)) {
-    dos.push(siteDo);
-  }
+  const base = getDefaultDosForMood(config.moodTags).filter(
+    (d) => !d.startsWith("Hold dials ENERGY"),
+  );
+  const withDials = mergeUnique(base, getAntislopDos(config));
+  let result = withDials;
   for (const voice of config.brandVoice) {
     const voiceDo = BRAND_VOICE_DOS[voice];
-    if (voiceDo && !dos.includes(voiceDo)) {
-      dos.push(voiceDo);
-    }
+    if (voiceDo) result = mergeUnique(result, [voiceDo]);
   }
-  return dos;
+  return result;
+}
+
+export function getSuggestedDontsForIdentity(
+  config: Pick<DesignConfig, "moodTags">,
+): string[] {
+  return mergeUnique(getDefaultDontsForMood(config.moodTags), getAntislopDonts());
 }
 
 export function buildSpacingScale(base: 4 | 8): Record<string, string> {

@@ -5,7 +5,7 @@ export const UI_STYLE_OPTIONS = [
   {
     id: "flat",
     label: "Flat",
-    desc: "Clean surfaces, minimal depth — modern product UI.",
+    desc: "Clean surfaces, minimal depth - modern product UI.",
   },
   {
     id: "skeuomorphism",
@@ -45,7 +45,7 @@ export const UI_STYLE_OPTIONS = [
   {
     id: "outlined",
     label: "Outlined",
-    desc: "Stroke-first UI — clear borders, open fields, light fill.",
+    desc: "Stroke-first UI - clear borders, open fields, light fill.",
   },
   {
     id: "gradient",
@@ -75,7 +75,7 @@ export const UI_STYLE_OPTIONS = [
   {
     id: "monochrome",
     label: "Monochrome",
-    desc: "Ink and canvas only — contrast carries the hierarchy.",
+    desc: "Ink and canvas only - contrast carries the hierarchy.",
   },
   {
     id: "paper",
@@ -110,7 +110,7 @@ export const UI_STYLE_OPTIONS = [
   {
     id: "gaming",
     label: "Gaming",
-    desc: "Gamified HUD energy — XP bars, badges, and punchy panels.",
+    desc: "Gamified HUD energy - XP bars, badges, and punchy panels.",
   },
   {
     id: "memphis",
@@ -1119,63 +1119,63 @@ export function getUiStylePreview(
 
 export function uiStyleProse(style: DesignConfig["uiStyle"]): string {
   const map: Record<DesignConfig["uiStyle"], string> = {
-    flat: "Flat design — clean surfaces, token-driven color, and minimal decorative depth.",
+    flat: "Flat design - clean surfaces, token-driven color, and minimal decorative depth.",
     skeuomorphism:
-      "Skeuomorphic cues — subtle gradients, inset highlights, and tactile button affordances.",
+      "Skeuomorphic cues - subtle gradients, inset highlights, and tactile button affordances.",
     brutalism:
-      "Neo-brutalist — heavy borders, offset hard shadows, and unapologetic high contrast.",
+      "Neo-brutalist - heavy borders, offset hard shadows, and unapologetic high contrast.",
     glassmorphism:
-      "Glassmorphic layers — frosted translucent panels over vibrant or photographic backgrounds.",
+      "Glassmorphic layers - frosted translucent panels over vibrant or photographic backgrounds.",
     neomorphism:
-      "Neomorphic surfaces — soft extruded cards using dual same-hue shadows on a matching canvas.",
+      "Neomorphic surfaces - soft extruded cards using dual same-hue shadows on a matching canvas.",
     claymorphism:
-      "Claymorphic shapes — chunky rounded elements with soft inner light and playful depth.",
+      "Claymorphic shapes - chunky rounded elements with soft inner light and playful depth.",
     material:
-      "Material elevation — layered paper surfaces, soft ambient shadows, and clear hierarchy.",
+      "Material elevation - layered paper surfaces, soft ambient shadows, and clear hierarchy.",
     swiss:
-      "Swiss / International Style — grid discipline, hairline rules, and typographic clarity.",
+      "Swiss / International Style - grid discipline, hairline rules, and typographic clarity.",
     outlined:
-      "Outlined UI — stroke-first components, open fields, and restrained fills.",
+      "Outlined UI - stroke-first components, open fields, and restrained fills.",
     gradient:
-      "Gradient-led surfaces — soft color washes, vivid accents, and atmospheric backgrounds.",
+      "Gradient-led surfaces - soft color washes, vivid accents, and atmospheric backgrounds.",
     retro:
-      "Retro / vintage energy — chunky borders, offset shadows, and nostalgic contrast.",
+      "Retro / vintage energy - chunky borders, offset shadows, and nostalgic contrast.",
     maximalism:
-      "Maximalist composition — bold color blocks, layered accents, and high visual density.",
+      "Maximalist composition - bold color blocks, layered accents, and high visual density.",
     "soft-ui":
-      "Soft UI — airy padding, pill actions, and gentle low-contrast elevation.",
-    neon: "Neon accents — glow highlights, electric borders, and high-energy focus states.",
+      "Soft UI - airy padding, pill actions, and gentle low-contrast elevation.",
+    neon: "Neon accents - glow highlights, electric borders, and high-energy focus states.",
     monochrome:
-      "Monochrome system — ink and canvas contrast without decorative color chrome.",
+      "Monochrome system - ink and canvas contrast without decorative color chrome.",
     paper:
-      "Paper craft — cream sheet fills, stacked fold shadows, dashed rules, and print-like edges.",
+      "Paper craft - cream sheet fills, stacked fold shadows, dashed rules, and print-like edges.",
     bauhaus:
-      "Bauhaus geometry — hard edges, primary shape language, and strict alignment.",
+      "Bauhaus geometry - hard edges, primary shape language, and strict alignment.",
     cyberpunk:
-      "Cyberpunk UI — clipped panels, electric borders, and tech-noir contrast.",
+      "Cyberpunk UI - clipped panels, electric borders, and tech-noir contrast.",
     terminal:
-      "Terminal / utility chrome — mono density, tight borders, and operational clarity.",
+      "Terminal / utility chrome - mono density, tight borders, and operational clarity.",
     comic:
-      "Comic energy — thick outlines, offset shadows, and playful punch.",
+      "Comic energy - thick outlines, offset shadows, and playful punch.",
     minimalism:
-      "Minimalism — sparse surfaces, quiet chrome, and generous whitespace.",
+      "Minimalism - sparse surfaces, quiet chrome, and generous whitespace.",
     gaming:
-      "Gaming / gamification — HUD panels, XP energy, badges, and punchy action chrome.",
+      "Gaming / gamification - HUD panels, XP energy, badges, and punchy action chrome.",
     memphis:
-      "Memphis — playful geometry, dotted rules, mixed radii, and loud offset accents.",
+      "Memphis - playful geometry, dotted rules, mixed radii, and loud offset accents.",
     vaporwave:
-      "Vaporwave — pastel gradients, soft glow, and dreamy retro-futurist surfaces.",
-    y2k: "Y2K gloss — bubbly radii, metallic highlights, and shiny optimistic chrome.",
+      "Vaporwave - pastel gradients, soft glow, and dreamy retro-futurist surfaces.",
+    y2k: "Y2K gloss - bubbly radii, metallic highlights, and shiny optimistic chrome.",
     industrial:
-      "Industrial utility — hard edges, uppercase labels, and structural ink borders.",
+      "Industrial utility - hard edges, uppercase labels, and structural ink borders.",
     organic:
-      "Organic forms — irregular soft radii, earthy tints, and calm natural depth.",
+      "Organic forms - irregular soft radii, earthy tints, and calm natural depth.",
     luxury:
-      "Luxury restraint — thin metallic rules, generous whitespace, and uppercase CTAs.",
+      "Luxury restraint - thin metallic rules, generous whitespace, and uppercase CTAs.",
     pastel:
-      "Pastel softness — candy tints, pill actions, and gentle low-contrast surfaces.",
+      "Pastel softness - candy tints, pill actions, and gentle low-contrast surfaces.",
     pixel:
-      "Pixel / bitmap — square corners, chunky offset shadows, and game-UI crispness.",
+      "Pixel / bitmap - square corners, chunky offset shadows, and game-UI crispness.",
   };
   return map[style];
 }

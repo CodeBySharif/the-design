@@ -42,7 +42,6 @@ export function generateDesignMd(config: DesignConfig): string {
     version: "alpha",
     name: config.name,
     description: config.description,
-    siteType: config.siteType,
     colors: colorsToYaml(config),
     typography: typographyToYaml(config),
     rounded: config.rounded,
@@ -54,7 +53,21 @@ export function generateDesignMd(config: DesignConfig): string {
     frontMatter.brandVoice = config.brandVoice;
   }
   frontMatter.uiStyle = config.uiStyle;
-  frontMatter.layoutPatterns = config.layoutPatterns;
+  frontMatter.dials = {
+    energy: config.dials.energy,
+    rhythm: config.dials.rhythm,
+    motion: config.dials.motion,
+  };
+  if (config.pages.length > 0) {
+    frontMatter.surfaces = config.pages.map((page) => ({
+      id: page.id,
+      name: page.name,
+      role: page.role || undefined,
+      intent: page.intent || undefined,
+      composition: page.composition || undefined,
+      avoid: page.avoid || undefined,
+    }));
+  }
   if (config.tagline) {
     frontMatter.tagline = config.tagline;
   }
